@@ -15,6 +15,18 @@ namespace MyApp.Namespace
         {
             _orderService = orderService;
         }
+        [HttpPost("/api/order-confirmation/{orderId}")]
+        public async Task<IActionResult> OrderConfirmAsync(int orderId,[FromBody]int userId)
+        {
+            var order = await _orderService.CheckOrderById(orderId, userId);
+            if(order.Id == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(order);
+        }
+        
         [HttpPost("/api/create/order")]
         public async Task<IActionResult> CreateOrder([FromBody] OrderDTO dto)
         {

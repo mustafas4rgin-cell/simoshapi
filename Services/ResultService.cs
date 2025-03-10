@@ -7,16 +7,26 @@ namespace SimoshStoreAPI;
 public class ResultService : IResultService
 {
     private readonly IDataRepository _dataRepository;
-    private readonly ICategoryService _categoryService;
-    private readonly IProductService _productService;
 
-    public ResultService(IProductService productService, ICategoryService categoryService, IDataRepository dataRepository)
+
+    public ResultService(IDataRepository dataRepository)
     {
-        _productService = productService;
-        _categoryService = categoryService;
         _dataRepository = dataRepository;
     }
-
+    public int GetUserCount()
+    {
+        return _dataRepository.GetAll<UserEntity>().Count();
+    }
+    public int GetProductCount()
+    {
+        var products = _dataRepository.GetAll<ProductEntity>();
+        return products.Count();
+    }
+    public int GetCategoryCount()
+    {
+        var categories = _dataRepository.GetAll<CategoryEntity>();
+        return categories.Count();
+    }
     public int GetOrderCount()
     {
         var ordersCount = _dataRepository.GetAll<OrderEntity>().Count();

@@ -24,6 +24,8 @@ public static class ServiceRegistrationProvider
             (typeof(IAuthService), typeof(AuthService)),
             (typeof(ITokenService), typeof(TokenService)),
             (typeof(IProfileService), typeof(ProfileService)),
+            (typeof(ICartService), typeof(CartService)),
+            (typeof(IAdminService), typeof(AdminService))
         };
 
         foreach (var service in servicesToRegister)

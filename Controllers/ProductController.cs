@@ -19,6 +19,20 @@ namespace MyApp.Namespace
         {
             _productService = productService;
         }
+        [HttpGet("/api/search-product")]
+        public async Task<IActionResult> Search()
+        {
+            var model = await _productService.SearchProduct();
+
+            return Ok(model);
+        }
+        [HttpGet("/api/update-admin/product/{id}")]
+        public async Task<IActionResult> AdminUpdateProduct(int id)
+        {
+            var dto = await _productService.AdminUpdate(id);
+
+            return Ok(dto);
+        }
         [HttpGet("/api/popularproducts")]
         public async Task<IActionResult> PopularProducts([FromQuery]int? take)
         {

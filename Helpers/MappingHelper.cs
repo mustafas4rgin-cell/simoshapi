@@ -42,22 +42,7 @@ public class MappingHelper
             IsConfirmed = false
         };
     }
-    public static UserEntity MappingUserEntity(UserDTO dto)
-    {
-        HashingHelper.CreatePasswordHash(dto.Password, out byte[] passwordHash, out byte[] passwordSalt);
-        return new UserEntity
-        {
-            Address = dto.Address,
-            Email = dto.Email,
-            FirstName = dto.FirstName,
-            PasswordHash = passwordHash,
-            PasswordSalt = passwordSalt,
-            Phone = dto.Phone,
-            RoleId = dto.RoleId,
-            LastName = dto.LastName
 
-        };
-    }
     public static OrderEntity MappingOrderEntity(OrderDTO dto)
     {
         return new OrderEntity

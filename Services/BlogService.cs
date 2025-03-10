@@ -39,8 +39,11 @@ public class BlogService : IBlogService
     }
     public async Task<BlogEntity> GetBlogByIdAsync(int id)
     {
-        var blogs = await GetBlogsAsync();
-        var blog = blogs.FirstOrDefault(B => B.Id==id);
+        var blog = await _dataRepository.GetAll<BlogEntity>()
+                        .Include(B=> B.User)
+                        .Include(B=> B.Comments)
+                        .Include(B=> B.BlogCategories)
+                        .FirstOrDefaultAsync(B => B.Id == id);
         if(blog == null)
         {
             throw new NullReferenceException($"There is no blog with that {id}");

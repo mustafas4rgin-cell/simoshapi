@@ -5,6 +5,8 @@ namespace SimoshStoreAPI;
 
 public interface IOrderService
 {
+    Task<IServiceResult> CheckOut(OrderEntity order);
+    Task<OrderEntity> CheckOrderById(int orderId, int userId);
     Task<OrderEntity> GetOrderByCodeAsync(string orderCode);
     Task<IServiceResult> CreateOrderAsync(OrderDTO dto);
     Task<IEnumerable<OrderEntity>> GetUsersOrdersAsync(int userId);

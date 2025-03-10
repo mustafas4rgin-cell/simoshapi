@@ -9,13 +9,52 @@ using SimoshStore;
 public class ProductService : IProductService
 {
     private readonly IDataRepository _Repository;
-    private readonly ICommentService _commentService;
     private readonly IValidator<ProductDTO> _Validator;
-    public ProductService(ICommentService commentService, IValidator<ProductDTO> validator, IDataRepository repository)
+    public ProductService(ICategoryService categoryService, IValidator<ProductDTO> validator, IDataRepository repository)
     {
-        _commentService = commentService;
         _Validator = validator;
         _Repository = repository;
+    }
+    public async Task<SearchBarViewModel> SearchProduct()
+    {
+        var popularProducts = await _Repository.GetAll<ProductEntity>()
+                            .Include(P => P.Discount).OrderBy(P => P.Comments.Count()).ToListAsync();
+
+        var categories = await _Repository.GetAll<CategoryEntity>().ToListAsync();
+
+        if (popularProducts.Count() <= 0 || categories.Count() <= 0)
+        {
+            return new SearchBarViewModel();
+        }
+
+        return new SearchBarViewModel
+        {
+            Categories = categories,
+            Products = popularProducts,
+        };
+    }
+    public async Task<UpdateProductDTO> AdminUpdate(int id)
+    {
+        var product = await _Repository.GetAll<ProductEntity>()
+                            .Include(P => P.Discount)
+                            //.Include(P => P.Images)
+                            .FirstOrDefaultAsync(P => P.Id == id);
+
+        if (product == null)
+        {
+            return new UpdateProductDTO();
+        }
+
+        var categories = await _Repository.GetAll<CategoryEntity>().ToListAsync();
+
+        var discounts = await _Repository.GetAll<DiscountEntity>().ToListAsync();
+
+        return new UpdateProductDTO
+        {
+            Categories = categories,
+            Discounts = discounts,
+            Product = product
+        };
     }
     public async Task<IEnumerable<ProductEntity>> PopularProductsAsync(int? take)
     {
@@ -25,7 +64,7 @@ public class ProductService : IProductService
                                 .Include(P => P.Comments)
                                 .ToListAsync();
 
-        if(take.HasValue)
+        if (take.HasValue)
         {
             popularProducts = popularProducts.Take(take.Value).ToList();
         }
@@ -79,7 +118,7 @@ public class ProductService : IProductService
                             //.Include(p => p.Images)
                             .Where(p => p.CategoryId == product.CategoryId)
                             .ToListAsync();
-        if (similarProducts.Count <=0)
+        if (similarProducts.Count <= 0)
         {
             throw new Exception("No similar products found");
         }
@@ -92,7 +131,7 @@ public class ProductService : IProductService
                             //.Include(p => p.Images)
                             .Where(p => p.CategoryId != product.CategoryId)
                             .ToListAsync();
-        if (relatedProducts.Count <=0)
+        if (relatedProducts.Count <= 0)
         {
             throw new Exception("No related products found");
         }
@@ -106,22 +145,22 @@ public class ProductService : IProductService
         };
     }
     public async Task<IEnumerable<ProductEntity>> GetProductsAsync()
-{
-    var products = await _Repository.GetAll<ProductEntity>()
-        .Include(p => p.Discount)
-        .Include(p => p.Category)
-        .Include(p => p.Comments)
-        .ThenInclude(c => c.User)
-        .ToListAsync();
-        
-
-    if (!products.Any())
     {
-        throw new Exception("No products found");
-    }
+        var products = await _Repository.GetAll<ProductEntity>()
+            .Include(p => p.Discount)
+            .Include(p => p.Category)
+            .Include(p => p.Comments)
+            .ThenInclude(c => c.User)
+            .ToListAsync();
 
-    return products;
-}
+
+        if (!products.Any())
+        {
+            throw new Exception("No products found");
+        }
+
+        return products;
+    }
 
 
 

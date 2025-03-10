@@ -46,7 +46,7 @@ namespace MyApp.Namespace
             }
             return Ok(users);
         }
-        [HttpPut("/api/update/user{id}")]
+        [HttpPut("/api/update/user/{id}")]
         public async Task<IActionResult> UpdateUser(UserDTO user, int id)
         {
             var result = await _userService.UpdateUserAsync(user, id);

@@ -5,6 +5,8 @@ namespace SimoshStoreAPI;
 
 public interface IProductService
 {
+    Task<SearchBarViewModel> SearchProduct();
+    Task<UpdateProductDTO> AdminUpdate(int id);
     Task<IEnumerable<ProductEntity>> PopularProductsAsync(int? take);
     Task<IEnumerable<ProductEntity>> GetProductsAsync();
     Task<IServiceResult> CreateProductAsync(ProductDTO product);

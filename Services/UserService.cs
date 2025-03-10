@@ -73,15 +73,10 @@ public class UserService : IUserService
     public async Task<IServiceResult> UpdateUserAsync(UserDTO dto, int id)
     {
         var user = await GetUserByIdAsync(id);
-        user.Address = dto.Address;
         user.Email = dto.Email;
         user.FirstName = dto.FirstName;
         user.LastName = dto.LastName;
         user.Phone = dto.Phone;
-        user.RoleId = dto.RoleId;
-        HashingHelper.CreatePasswordHash(dto.Password, out var passwordHash, out var passwordSalt);
-        user.PasswordHash = passwordHash;
-        user.PasswordSalt = passwordSalt;
         await _dataRepository.UpdateAsync(user);
         return new ServiceResult(true, "User updated successfully");
 
